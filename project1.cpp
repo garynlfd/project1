@@ -7,45 +7,13 @@
 #include <fstream>
 using namespace std;
 
-void calculate()
-{
-    int row, col;
-    int a_row = 0, a_col = 0;
-    int max = 0;
-    cin >> row >> col;
-    int map[row][col];
-    auto start = chrono::high_resolution_clock::now();
-    for(int i = 0; i < row; i++)
-    {
-        for(int j = 0; j < col; j++)
-        {
-            cin >> map[i][j];
-            if(i == 0 && j == 0)
-            {
-                max = map[i][j];
-                a_row = i, a_col = j;
-            }
-            else
-            {
-                if(map[i][j] > max)
-                {
-                    max = map[i][j];
-                    a_row = i, a_col = j;
-                }
-            }
-        }
-    }
-    auto end = chrono::high_resolution_clock::now();
-    cout << max << endl;
-    chrono::duration<double, nano> diff = end - start;
-    cout << a_row << ' ' << a_col << endl;
-    cout << diff.count() << " nanoseconds" << std::endl;
-    //return 0;
-}
-
 int main(int argc, char *argv[])
 {
     int row, col;
+    int matrix[row][col];
+    int num = 0;
+    int tmp[1000][1000] = {0};
+    int ans[1000][1000] = {0};
     string file = "./";
     string studentID = argv[1];
     string fileinput = file + studentID + "/matrix.data";
@@ -58,7 +26,6 @@ int main(int argc, char *argv[])
         while(!input.eof())
         {
             input >> row >> col;
-            int matrix[row][col];
             for(int i = 0; i < row; ++i)
             {
                 for(int j = 0; j < col; ++j)
@@ -66,21 +33,96 @@ int main(int argc, char *argv[])
                     input >> matrix[i][j];
                 }
             }
-            for(int i = 0; i < row; ++i)
-            {
-                for(int j = 0; j < col; ++j)
-                {
-                    cout << matrix[i][j] << " ";
-                }
-                cout << endl;
-            }
             int eat;
             input >> eat;
         }
     }
-
     input.close();
+    auto start = chrono::high_resolution_clock::now();
+    for(int i = 0; i < row; ++i)
+    {
+        for(int j = 0; j < col; ++j)
+        {
+            if(j == 0)
+            {
+                if(matrix[i][j] >= matrix[i][j+1])
+                {
+                    tmp[i][j] = 1;
+                    if(matrix[i][j] > matrix[i][j+1])
+                    {
+                        ++j;
+                    }
+                }
+            }
+            else if(j == col - 1)
+            {
+                if(matrix[i][j] >= matrix[i][j-1])
+                {
+                    tmp[i][j] = 1;
+                }
+            }
+            else
+            {
+                if(matrix[i][j] >= matrix[i][j+1] && matrix[i][j] >= matrix[i][j-1])
+                {
+                    tmp[i][j] = 1;
+                    if(matrix[i][j] > matrix[i][j+1])
+                    {
+                        ++j;
+                    }
+                }
+            }
+        }
+    }
+    for(int i = 0; i < row; ++i)
+    {
+        for(int j = 0; j < col; ++j)
+        {
+            if(tmp[i][j] == 1)
+            {
+                if(i == 0)
+                {
+                    if(matrix[i][j] >= matrix[i+1][j])
+                    {
+                        ans[i][j] = 1;
+                        num++;
+                    }
+                }
+                else if(i == row - 1)
+                {
+                    if(matrix[i][j] >= matrix[i-1][j])
+                    {
+                        ans[i][j] = 1;
+                        num++;
+                    }
+                }
+                else
+                {
+                    if(matrix[i][j] >= matrix[i-1][j] && matrix[i][j] >= matrix[i+1][j])
+                    {
+                        ans[i][j] = 1;
+                        num++;
+                    }
+                }
+            }
+        }
+    }
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double, nano> diff = end - start;
+    cout << num << endl;
+    for(int i = 0; i < row; ++i)
+    {
+        for(int j = 0; j < col; ++j)
+        {
+            if(ans[i][j] == 1)
+            {
+                cout << i << " " << j << endl;
+            }
+        }
+    }
+    cout << diff.count() << " nanoseconds" << std::endl;
     output.open(fileoutput.c_str());
+    //output <<
     output.close();
     return 0;
 }
