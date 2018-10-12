@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         input >> row >> col;
         int matrix[row][col];
         int tmp[row][col] = {0};
-        int ans[row][col] = {0};
+        int ans[1000*1000] = {0};
         while(!input.eof())
         {
             for(int i = 0; i < row; ++i)
@@ -83,24 +83,27 @@ int main(int argc, char *argv[])
                     {
                         if(matrix[i][j] >= matrix[i+1][j])
                         {
-                            ans[i][j] = 1;
                             num++;
+                            ans[2*num-2] = i;
+                            ans[2*num-1] = j;
                         }
                     }
                     else if(i == row - 1)
                     {
                         if(matrix[i][j] >= matrix[i-1][j])
                         {
-                            ans[i][j] = 1;
                             num++;
+                            ans[2*num-2] = i;
+                            ans[2*num-1] = j;
                         }
                     }
                     else
                     {
                         if(matrix[i][j] >= matrix[i-1][j] && matrix[i][j] >= matrix[i+1][j])
                         {
-                            ans[i][j] = 1;
                             num++;
+                            ans[2*num-2] = i;
+                            ans[2*num-1] = j;
                         }
                     }
                 }
@@ -109,15 +112,10 @@ int main(int argc, char *argv[])
         auto end = chrono::high_resolution_clock::now();
         chrono::duration<double, nano> diff = end - start;
         cout << num << endl;
-        for(int i = 0; i < row; ++i)
+        for(int i = 0; i <= 2*num-1; ++i)
         {
-            for(int j = 0; j < col; ++j)
-            {
-                if(ans[i][j] == 1)
-                {
-                    cout << i << " " << j << endl;
-                }
-            }
+            if(!(i % 2)) cout << ans[i] + 1 << ' ';
+            else cout << ans[i] + 1 << endl;
         }
         cout << diff.count() << " nanoseconds" << std::endl;
         output.open(fileoutput.c_str());
