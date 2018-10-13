@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         input >> row >> col;
         int matrix[row][col];
         int tmp[row][col] = {0};
-        int ans[row*col] = {0};
+        int ans[row*col*2] = {0};
         while(!input.eof())
         {
             for(int i = 0; i < row; ++i)
