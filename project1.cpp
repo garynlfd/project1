@@ -1,8 +1,4 @@
 #include <iostream>
-#include <chrono>
-#include <iomanip>
-#include <cmath>
-#include <limits>
 #include <string>
 #include <fstream>
 using namespace std;
@@ -37,7 +33,6 @@ int main(int argc, char *argv[])
             input >> eat;
         }
         input.close();
-        auto start = chrono::high_resolution_clock::now();
         for(int i = 0; i < row; ++i)
         {
             for(int j = 0; j < col; ++j)
@@ -109,17 +104,13 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        auto end = chrono::high_resolution_clock::now();
-        chrono::duration<double, nano> diff = end - start;
-        cout << num << endl;
+        output.open(fileoutput.c_str());
+        output << num << endl;
         for(int i = 0; i <= 2*num-1; ++i)
         {
-            if(!(i % 2)) cout << ans[i] + 1 << ' ';
-            else cout << ans[i] + 1 << endl;
+            if(!(i % 2)) output << ans[i] + 1 << ' ';
+            else output << ans[i] + 1 << endl;
         }
-        cout << diff.count() << " nanoseconds" << std::endl;
-        output.open(fileoutput.c_str());
-        //output <<
         output.close();
     }
     return 0;
